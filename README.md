@@ -44,3 +44,129 @@ The agent needs to know what the AI is buid of before being able to calculate th
 - Multi-Agent Workflow Cost: Simulates team of agents with multiple steps
 - Cost Comparison: Compare platforms/models to find cheapest option
 - Recommendation: Suggest cheaper alternatives or cost optimizations
+
+
+### Scope & Limitations
+
+1. Core Features :
+
+- LLM Cost Estimation	: Calculates token-based cost for GPT / Claude models
+- Server Cost Estimation: 	Estimates monthly cost for hosting providers
+- Tool Cost Estimation: Cost of APIs (e.g., web search, vector DB)
+- Multi-Agent Simulation: Calculates cost of workflows with multiple agents
+- Cost Comparison	: Compares platforms and model providers
+- Recommendations	: Optimizes for lowest-cost setups
+
+2. Future Expansion
+
+In later versions, the agent could:
+
+- Use real pricing APIs (AWS Pricing API, OpenAI tools API, etc.)
+- Track real token usage of agents
+- Store history and learn typical usage patterns
+- Run as a service with a web interface
+
+
+# Architecture Overview: 
+
+## Multi-Agent Flow:
+
+
+1️⃣ Overview of the Workflow
+
+### User Input:
+
+User specifies project details:
+
+Number/type of AI agents
+
+Expected API calls per agent (tokens, calls per day)
+
+Hosting requirements (Vertex AI resources, storage, traffic)
+
+Whether live pricing is needed
+
+### Planner Agent :
+
+- Interprets the input
+- Decides which tasks are needed (LLM cost, server cost, live pricing)
+- Generates a task list for the Dispatcher
+
+### Dispatcher Agent:
+
+Sends each task to the appropriate agent:
+- LLM Cost Agent → calculates token usage cost based on model choice
+- Server Cost Agent → calculates Vertex AI resource cost
+- Pricing API Agent → fetches live pricing using Google API key
+- Workflow Agent → aggregates multiple agents’ costs
+
+### Pricing API Agent:
+
+Uses Google Cloud APIs (or Vertex AI pricing endpoints) to fetch:
+- Vertex AI managed instance costs
+- Storage costs (Cloud Storage buckets)
+- Traffic / egress fees
+- LLM pricing if using Vertex-hosted models
+- Stores results in JSON format for other agents
+
+### LLM Cost Agent:
+
+Uses static or live model pricing
+- Calculates total tokens per month × cost per 1M tokens
+
+### Server Cost Agent:
+
+Calculates Vertex AI compute costs:
+
+- Instance type (CPU/GPU) × hours per month × region pricing
+- Storage and network usage
+
+
+### Workflow Agent:
+
+Aggregates all costs:
+
+- Multi-agent LLM usage
+- Hosting + storage + bandwidth
+
+
+### Formatter Agent:
+
+Creates human-readable report and JSON output:
+
+
+
+✅ Result:
+
+- Understand the project
+- Collect pricing data (live + static)
+- Compute LLM + server + workflow costs
+- Output clear, actionable reports
+
+Answer always includes:
+
+- 🧾 Source of prices
+
+- 📅 Date of retrieval
+
+- 📊 Confidence level
+
+User Input → Planner Agent 
+               │
+               ▼
+         Dispatcher Agent
+   ┌─────────┬─────────┐
+   ▼         ▼         ▼
+LLM Cost  Server Cost  Pricing API
+ Agent      Agent        Agent
+   │         │         │
+   └─────────┴─────────┘
+               │
+               ▼
+        Workflow Agent
+               │
+               ▼
+        Formatter Agent → Output
+
+
+
