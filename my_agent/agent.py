@@ -1,13 +1,13 @@
 from google.adk.runners import InMemoryRunner
-from google.adk.agents import Agent
-from google.adk.tools import AgentTool, google_search
+from google.adk.agents import Agent, SequentialAgent
+from google.adk.tools import google_search
 
 
 information_collector = Agent(
     name="InformationCollector",
     model="gemini-2.5-flash-lite",
-    instruction="""You are an information collection specialist for
-    AI cost estimation. Your job is to:
+    instruction="""You are a specialized research agent,
+    who collect information about AI cost estimation. Your job is to:
     1. Analyze the user's request and identify what information is needed
     2. Detect missing inputs (model type, token counts, server specs, etc.)
     3. Offer sensible defaults when data is missing
@@ -49,10 +49,14 @@ cost_calculator = Agent(
 print("✅ summarizer_agent created.")
 
 
-root_agent = Agent(
+root_agent = SequentialAgent(
     name="CostCalculatorCoordinator",
     model="gemini-2.5-flash-lite",
     instruction="""You are a cost calculator coordinator.
+    Your goal is to answer the user's query by orchestrating
+    a workflow of agents. You have two agents at your disposal:
+    - InformationCollector: to gather information about the user's query
+    - CostCalculator: to calculate the cost of the user's query
 
     Your workflow:
     1. FIRST, call the `InformationCollector` tool to gather all inputs
@@ -62,10 +66,7 @@ root_agent = Agent(
        - Assumptions made
        - Recommendations
        - Formulas used""",
-    tools=[
-        AgentTool(information_collector),
-        AgentTool(cost_calculator)
-    ]
+    sub_agents=[information_collector, cost_calculator]
 )
 
 print("✅ root_agent created.")
