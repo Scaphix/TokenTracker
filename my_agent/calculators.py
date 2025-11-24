@@ -190,7 +190,7 @@ def estimate_multi_agent_cost(
 # Price Calculator Agent
 price_calculator_agent = Agent(
     name="price_Calculator",
-    model="gemini-2.5-flash-lite",
+    model="gemini-2.0-flash-exp",
     instruction="""You are a cost calculation specialist.
     Using the collected information: {collected_information}
 """,

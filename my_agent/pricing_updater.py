@@ -5,7 +5,6 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 
 from google.adk.agents import Agent, ParallelAgent
-from google.adk.tools import google_search
 
 from my_agent.data_update import (
     DATABASE_PATH,
@@ -50,7 +49,7 @@ LLMPricingAgent = Agent(
         "{name, provider, input_per_1m, output_per_1m, "
         "currency, source, retrieved_at}. Always use USD per 1M tokens."
     ),
-    tools=[google_search],
+    tools=[],
     output_key="llm_pricing",
 )
 
@@ -63,7 +62,7 @@ ServerPricingAgent = Agent(
         "each with: {provider, plan, base_monthly, storage_gb_price, "
         "traffic_gb_price, currency, source, retrieved_at}."
     ),
-    tools=[google_search],
+    tools=[],
     output_key="server_pricing",
 )
 

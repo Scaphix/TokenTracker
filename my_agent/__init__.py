@@ -1,5 +1,5 @@
 """
-TokenTracker: Professional Multi-Agent AI Cost Calculator
+TokenTracker: Professional AI Cost Calculator
 
 A production-ready cost estimation system powered by Google ADK that helps
 developers predict and optimize AI infrastructure costs before deployment.
@@ -12,31 +12,30 @@ Features:
 - Support for LLM, server, and multi-agent scenarios
 
 Example:
-    from my_agent import TokenTrackerCoordinator
+    from my_agent import root_agent
+    from google.adk.runners import InMemoryRunner
 
-    coordinator = TokenTrackerCoordinator()
-    result = coordinator.run({
-        "type": "llm_cost",
-        "model": "gemini-2.5-flash-lite",
-        "avg_tokens_per_call": 2000,
-        "calls_per_day": 50
-    })
+    # Use with ADK CLI (recommended):
+    # $ adk run my_agent
 
-    print(f"Monthly cost: ${result.monthly_cost:.2f}")
-    print(f"Optimizations: {result.optimizations}")
+    # Or programmatically:
+    runner = InMemoryRunner(agent=root_agent)
+    # Then use ADK's session API
 """
 from __future__ import annotations
 
+from .agent import root_agent
 from .calculators import (
-    price_calculator_agent
+    estimate_llm_cost,
+    estimate_server_cost,
+    estimate_multi_agent_cost,
 )
 from .pricing_updater import update_pricing_database
-from .agent import root_agent
-from .pricing_updater import recent_price
 
 __all__ = [
     "root_agent",
+    "estimate_llm_cost",
+    "estimate_server_cost",
+    "estimate_multi_agent_cost",
     "update_pricing_database",
-    "price_calculator_agent",
-    "recent_price",
 ]

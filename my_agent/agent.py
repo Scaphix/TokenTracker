@@ -5,11 +5,9 @@ Orchestrates information collection → cost calculation → optimization
 from __future__ import annotations
 
 from typing import Any, Dict
-from google.adk.agents import Agent, SequentialAgent
-from google.adk.tools import google_search
-from google.adk.runners import InMemoryRunner
+from google.adk.agents import Agent
+
 from my_agent.data_update import DATABASE_PATH
-from my_agent.pricing_updater import recent_price
 import json
 
 
@@ -410,62 +408,54 @@ InformationCollectorAgent = Agent(
         "- Which plan/instance type?\n"
         "- How many hours per month will it run?\n"
         "- Storage and bandwidth needs?\n\n"
-        "Use google_search if you need current pricing info or typical "
-        "usage patterns."
+        "Note: Use available pricing data and suggest checking provider "
+        "websites for the latest information if needed."
     ),
-    tools=[collect_project_information, google_search],
+    tools=[collect_project_information],
     output_key="collection_report",
 )
 
 print("✅ InformationCollectorAgent created.")
 
 # ============================================================================
-# AGENT 2: Cost Calculator
+# ROOT AGENT: Combined Information Collection & Cost Calculation
 # ============================================================================
 
-CostCalculatorAgent = Agent(
-    name="CostCalculator",
+root_agent = Agent(
+    name="TokenTrackerCoordinator",
     model="gemini-2.5-flash-lite",
     instruction=(
-        "You are a cost calculation specialist. Given validated project data, "
-        "calculate accurate cost estimates.\n\n"
+        "You are TokenTracker, a professional AI cost estimation system.\n\n"
+        "YOUR MISSION:\n"
+        "Help users understand and optimize their AI infrastructure costs "
+        "BEFORE deployment.\n\n"
         "WORKFLOW:\n"
-        "1. Receive validated_data from the InformationCollector\n"
-        "2. Use calculate_cost_estimate tool to compute costs\n"
-        "3. Analyze the results and identify optimization opportunities\n"
-        "4. Present clear, actionable cost breakdown\n\n"
-        "YOUR ANALYSIS SHOULD INCLUDE:\n"
-        "- Total monthly and daily costs\n"
-        "- Cost breakdown by component\n"
+        "1. Ask the user what they want to estimate "
+        "(LLM costs, server costs, or multi-agent workflow)\n"
+        "2. Use collect_project_information to gather all required data\n"
+        "3. If data is missing, ask follow-up questions conversationally\n"
+        "4. Once you have validated_data with status='success', "
+        "use calculate_cost_estimate\n"
+        "5. Analyze the results and provide optimization recommendations\n"
+        "6. Present a clear executive summary\n\n"
+        "YOUR RESPONSE MUST INCLUDE:\n"
+        "- Clear cost breakdown (monthly/daily)\n"
+        "- Confidence level and any assumptions made\n"
         "- Formula used for transparency\n"
-        "- Confidence level based on data quality\n"
-        "- 2-3 optimization recommendations\n"
+        "- Top 2-3 actionable optimization opportunities\n"
         "- Alternative cheaper options if available\n\n"
         "OPTIMIZATION TIPS:\n"
         "- Suggest cheaper models with similar performance\n"
         "- Recommend caching for high-volume usage\n"
         "- Identify cost drivers (e.g., high token usage)\n"
         "- Suggest reserved instances for 24/7 workloads\n\n"
-        "Use google_search to find:\n"
-        "- Alternative models/services\n"
-        "- Current pricing updates\n"
-        "- Cost-saving strategies"
+        "TONE:\n"
+        "- Professional but approachable\n"
+        "- Transparent about limitations and assumptions\n"
+        "- Action-oriented and data-driven\n\n"
+        "Note: Use the pricing data available in the tools. "
+        "Suggest users check provider websites for latest pricing if needed."
     ),
-    tools=[calculate_cost_estimate, google_search],
-    output_key="calculation_summary",
+    tools=[collect_project_information, calculate_cost_estimate],
+    output_key="cost_analysis",
 )
-
-print("✅ CostCalculatorAgent created.")
-
-# ============================================================================
-# ROOT COORDINATOR: TokenTracker
-# ============================================================================
-
-root_agent = SequentialAgent(
-    name="TokenTrackerCoordinator",
-    sub_agents=[InformationCollectorAgent, CostCalculatorAgent, recent_price],
-)
-print("✅ root_agent created.")
-
-runner = InMemoryRunner(agent=root_agent)
-response = runner.run_debug("How much will my AI agent cost? ")
