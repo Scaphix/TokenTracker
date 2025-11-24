@@ -31,11 +31,11 @@ from .calculators import (
     price_calculator_agent
 )
 from .pricing_updater import update_pricing_database
-from .agent import TokenTrackerCoordinator
+from .agent import root_agent
 from .pricing_updater import recent_price
 
 __all__ = [
-    "TokenTrackerCoordinator",
+    "root_agent",
     "update_pricing_database",
     "price_calculator_agent",
     "recent_price",
