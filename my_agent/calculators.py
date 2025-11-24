@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, List, Tuple
 from data_update import DATABASE_PATH
+from google.adk.agents import Agent
 
 
 def _load_database() -> Dict[str, Any]:
@@ -182,3 +183,17 @@ def estimate_multi_agent_cost(
         "agents": breakdown,
         "metadata": metadata_snapshot,
     }
+
+
+# Price Calculator Agent
+price_calculator_agent = Agent(
+    name="price_Calculator",
+    model="gemini-2.5-flash-lite",
+    instruction="""You are a cost calculation specialist.
+    Using the collected information: {collected_information}
+""",
+    tools=[estimate_llm_cost, estimate_server_cost, estimate_multi_agent_cost],
+    output_key="price_analysis"
+)
+
+print("✅ price_calculator_agent created.")
