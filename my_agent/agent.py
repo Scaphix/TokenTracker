@@ -5,7 +5,7 @@ Orchestrates information collection → cost calculation → optimization
 from __future__ import annotations
 
 from typing import Any, Dict
-
+from google.adk.runners import InMemoryRunner
 from google.adk.agents import Agent, SequentialAgent
 from google.adk.tools import google_search
 
@@ -488,3 +488,6 @@ TokenTrackerCoordinator = SequentialAgent(
     sub_agents=[InformationCollectorAgent, CostCalculatorAgent],
     output_key="coordinator_summary",
 )
+
+runner = InMemoryRunner(agent=TokenTrackerCoordinator)
+response = runner.run_debug("How much will my AI agent cost? ")

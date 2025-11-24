@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import json
 from typing import Any, Dict, List, Tuple
-from data_update import DATABASE_PATH
 from google.adk.agents import Agent
+from pathlib import Path
+
+DATABASE_PATH = Path(__file__).resolve().parents[1] / "data" / "database.json"
 
 
 def _load_database() -> Dict[str, Any]:

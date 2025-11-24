@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 
-from google.adk.agents import Agent, ParallelAgent
+from google.adk.agents import Agent, ParallelAgent, SequentialAgent
 from google.adk.tools import google_search
 
 from my_agent.data_update import (
@@ -141,20 +141,22 @@ def update_pricing_database(force: bool = False) -> Dict[str, Any]:
     return database
 
 
-update_pricing_database = Agent(
+recent_price = SequentialAgent(
     name="update_pricing_database",
     model="gemini-2.5-flash-lite",
     instruction=(
         "Refresh pricing data if stale and persist the new snapshot."
     ),
     tools=[
+        _load_database,
+        should_refresh,
         PricingUpdater,
         _normalize_model_entry,
         _normalize_server_entry,
         update_pricing_database,
-        _load_database,
-        _write_database,
-        should_refresh,
+        _write_database
     ],
     output_key="pricing_database",
 )
+
+print("✅ recent_price agent created.")
