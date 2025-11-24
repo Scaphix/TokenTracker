@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "currency": "USD",
+    "sources": [
+      "OpenAI Pricing (https://openai.com/pricing)",
+      "Google Gemini Pricing (https://ai.google/discover/gemini)",
+      "AWS Pricing (https://aws.amazon.com/ec2/pricing/on-demand)",
+      "DigitalOcean Pricing (https://www.digitalocean.com/pricing)",
+      "Anthropic Pricing (https://www.anthropic.com/pricing)"
+    ],
+    "last_successful_update": null
+  },
+  "defaults": {
+    "llm_cost": {
+      "avg_tokens_per_call": 2000,
+      "days": 30,
+      "include_output": true,
+      "retry_rate": 0.05,
+      "currency": "USD"
+    },
+    "server_cost": {
+      "runtime_hours": 720,
+      "storage_gb": 20,
+      "traffic_gb": 50,
+      "currency": "USD"
+    },
+    "multi_agent": {
+      "days": 30
+    }
+  },
+  "pricing": {
+    "models": {
+      "gemini-2.5-flash-lite": {
+        "input_per_1m": 0.10,
+        "output_per_1m": 0.40,
+        "currency": "USD",
+        "source": "Google Gemini Pricing",
+        "retrieved_at": "2025-11-23T00:00:00Z",
+        "notes": "Gemini 2.5 Flash Lite default project quota."
+      },
+      "gpt-4o": {
+        "input_per_1m": 2.50,
+        "output_per_1m": 10.00,
+        "currency": "USD",
+        "source": "OpenAI Pricing",
+        "retrieved_at": "2025-11-20T00:00:00Z",
+        "notes": "Standard GPT-4o API tier."
+      },
+      "gpt-4o-mini": {
+        "input_per_1m": 0.15,
+        "output_per_1m": 0.60,
+        "currency": "USD",
+        "source": "OpenAI Pricing",
+        "retrieved_at": "2025-11-20T00:00:00Z",
+        "notes": "Lightweight GPT-4o Mini tier."
+      },
+      "gpt-3.5-turbo": {
+        "input_per_1m": 0.50,
+        "output_per_1m": 1.50,
+        "currency": "USD",
+        "source": "OpenAI Pricing",
+        "retrieved_at": "2025-11-15T00:00:00Z",
+        "notes": "Legacy GPT-3.5 Turbo."
+      },
+      "claude-3-5-sonnet": {
+        "input_per_1m": 3.00,
+        "output_per_1m": 15.00,
+        "currency": "USD",
+        "source": "Anthropic Pricing",
+        "retrieved_at": "2025-11-18T00:00:00Z",
+        "notes": "Claude 3.5 Sonnet publicly posted pricing."
+      }
+    },
+    "servers": {
+      "aws": {
+        "t2.micro": {
+          "base_monthly": 8.50,
+          "storage_gb_price": 0.10,
+          "traffic_gb_price": 0.05,
+          "currency": "USD",
+          "source": "AWS On-Demand Pricing",
+          "retrieved_at": "2025-11-22T00:00:00Z"
+        },
+        "t2.small": {
+          "base_monthly": 17.00,
+          "storage_gb_price": 0.10,
+          "traffic_gb_price": 0.05,
+          "currency": "USD",
+          "source": "AWS On-Demand Pricing",
+          "retrieved_at": "2025-11-22T00:00:00Z"
+        }
+      },
+      "digitalocean": {
+        "basic_1": {
+          "base_monthly": 5.00,
+          "storage_gb_price": 0.08,
+          "traffic_gb_price": 0.01,
+          "currency": "USD",
+          "source": "DigitalOcean Droplet Pricing",
+          "retrieved_at": "2025-11-22T00:00:00Z"
+        },
+        "basic_2": {
+          "base_monthly": 10.00,
+          "storage_gb_price": 0.08,
+          "traffic_gb_price": 0.01,
+          "currency": "USD",
+          "source": "DigitalOcean Droplet Pricing",
+          "retrieved_at": "2025-11-22T00:00:00Z"
+        }
+      }
+    }
+  }
+}
