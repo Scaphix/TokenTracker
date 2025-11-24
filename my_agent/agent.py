@@ -5,11 +5,11 @@ Orchestrates information collection → cost calculation → optimization
 from __future__ import annotations
 
 from typing import Any, Dict
-from google.adk.runners import InMemoryRunner
 from google.adk.agents import Agent, SequentialAgent
 from google.adk.tools import google_search
-
+from google.adk.runners import InMemoryRunner
 from my_agent.data_update import DATABASE_PATH
+from my_agent.pricing_updater import recent_price
 import json
 
 
@@ -318,7 +318,7 @@ def calculate_cost_estimate(
                 retry_rate=validated_data.get("retry_rate", 0.0),
             )
             formula = (
-                "Monthly Cost = (tokens/call × calls/day × days ÷ 1M) × "
+                "Monthly Cost = (tokens/call * calls/day * days ÷ 1M) * "
                 "price_per_1M"
             )
             breakdown = {"llm_cost": result["monthly_cost"]}
@@ -417,6 +417,7 @@ InformationCollectorAgent = Agent(
     output_key="collection_report",
 )
 
+print("✅ InformationCollectorAgent created.")
 
 # ============================================================================
 # AGENT 2: Cost Calculator
@@ -454,40 +455,17 @@ CostCalculatorAgent = Agent(
     output_key="calculation_summary",
 )
 
+print("✅ CostCalculatorAgent created.")
 
 # ============================================================================
 # ROOT COORDINATOR: TokenTracker
 # ============================================================================
 
-TokenTrackerCoordinator = SequentialAgent(
+root_agent = SequentialAgent(
     name="TokenTrackerCoordinator",
-    model="gemini-2.5-flash-lite",
-    instruction=(
-        "You are TokenTracker, a professional AI cost estimation system.\n\n"
-        "YOUR MISSION:\n"
-        "Help users understand and optimize their AI infrastructure costs "
-        "BEFORE deployment.\n\n"
-        "WORKFLOW:\n"
-        "1. Delegate to InformationCollector to gather project details\n"
-        "2. Delegate to CostCalculator to compute accurate costs\n"
-        "3. Synthesize findings into an executive summary\n\n"
-        "YOUR EXECUTIVE SUMMARY MUST INCLUDE:\n"
-        "- Clear cost breakdown (monthly/daily)\n"
-        "- Confidence level and assumptions made\n"
-        "- Data freshness (when pricing was last updated)\n"
-        "- Top 3 actionable optimization opportunities\n"
-        "- Next steps for the user\n\n"
-        "TONE:\n"
-        "- Professional but approachable\n"
-        "- Transparent about limitations\n"
-        "- Action-oriented\n"
-        "- Data-driven\n\n"
-        "Remember: Your goal is to help users make informed decisions and "
-        "avoid budget surprises in production."
-    ),
-    sub_agents=[InformationCollectorAgent, CostCalculatorAgent],
-    output_key="coordinator_summary",
+    sub_agents=[InformationCollectorAgent, CostCalculatorAgent, recent_price],
 )
+print("✅ root_agent created.")
 
-runner = InMemoryRunner(agent=TokenTrackerCoordinator)
+runner = InMemoryRunner(agent=root_agent)
 response = runner.run_debug("How much will my AI agent cost? ")
