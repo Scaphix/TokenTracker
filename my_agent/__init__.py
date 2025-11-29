@@ -24,18 +24,42 @@ Example:
 """
 from __future__ import annotations
 
-from .agent import root_agent
+# Import agents from new structure
+from .agents import (
+    root_agent,
+    InformationCollectorAgent,
+    CostCalculatorAgent,
+)
+
+# Import tools
+from .tools import (
+    collect_project_information,
+    calculate_cost_estimate,
+)
+
+# Import calculators
 from .calculators import (
     estimate_llm_cost,
     estimate_server_cost,
     estimate_multi_agent_cost,
 )
+
+# Import utilities
 from .pricing_updater import update_pricing_database
 
 __all__ = [
+    # Main agent
     "root_agent",
+    # Sub-agents
+    "InformationCollectorAgent",
+    "CostCalculatorAgent",
+    # Tools
+    "collect_project_information",
+    "calculate_cost_estimate",
+    # Calculators
     "estimate_llm_cost",
     "estimate_server_cost",
     "estimate_multi_agent_cost",
+    # Utilities
     "update_pricing_database",
 ]
