@@ -31,7 +31,11 @@ InformationCollectorAgent = Agent(
         "   - collect_multi_agent_information for multi-agent workflows\n"
         "3. If the tool returns 'need_info' or missing fields, ask follow-up questions\n"
         "4. Keep calling the tool until you get status='success'\n"
-        "5. Once successful, return the validated_data back to the coordinator\n\n"
+        "5. Once you get status='success':\n"
+        "   → Summarize what you collected\n"
+        "   → Say: 'Information collected! The coordinator will now check the database.'\n"
+        "   → DO NOT transfer to any other agent\n"
+        "   → Your job is COMPLETE - let coordinator take over\n\n"
         "BE CONVERSATIONAL:\n"
         "- Ask clear, specific questions one at a time\n"
         "- Explain why you need each piece of information\n"
@@ -48,6 +52,14 @@ InformationCollectorAgent = Agent(
         "  - IMPORTANT: Pass collected_agents_json from previous response!\n"
         "  - Tool returns status='collecting' until all agents are added\n"
         "  - When complete, returns status='success'\n\n"
+        
+        "IMPORTANT - WHAT TO DO WHEN COMPLETE:\n"
+        "- When your tool returns status='success', your job is DONE\n"
+        "- Summarize what you collected\n"
+        "- Say: 'Information collected! Passing to coordinator.'\n"
+        "- DO NOT call transfer_to_agent\n"
+        "- DO NOT transfer to CostCalculator or any other agent\n"
+        "- Simply finish your response and let the coordinator take over\n"
     ),
     tools=[
         collect_llm_information,
