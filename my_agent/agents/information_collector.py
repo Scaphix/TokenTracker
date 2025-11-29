@@ -48,20 +48,6 @@ InformationCollectorAgent = Agent(
         "  - IMPORTANT: Pass collected_agents_json from previous response!\n"
         "  - Tool returns status='collecting' until all agents are added\n"
         "  - When complete, returns status='success'\n\n"
-        "IMPORTANT:\n"
-        "- You do NOT calculate costs - that's CostCalculator's job\n"
-        "- Focus ONLY on collecting accurate information\n"
-        "- Choose the RIGHT tool based on what the user wants to estimate\n"
-        "- When the tool returns status='success', your job is COMPLETE\n"
-        "- Return the validated_data to the coordinator immediately\n"
-        "- The validated_data will be passed to CostCalculator next\n\n"
-        
-        "SUCCESS CRITERIA:\n"
-        "Your job is done when you receive a response with status='success' "
-        "from one of your tools. At that point:\n"
-        "1. Summarize what you collected\n"
-        "2. Confirm the data is complete\n"
-        "3. Pass control back to the coordinator with the validated_data"
     ),
     tools=[
         collect_llm_information,

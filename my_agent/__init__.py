@@ -28,6 +28,7 @@ from __future__ import annotations
 from .agents import (
     root_agent,
     InformationCollectorAgent,
+    DatabaseCheckerAgent,
     CostCalculatorAgent,
 )
 
@@ -36,6 +37,7 @@ from .tools import (
     collect_llm_information,
     collect_server_information,
     collect_multi_agent_information,
+    check_pricing_in_database,
     calculate_cost_estimate,
 )
 
@@ -54,11 +56,13 @@ __all__ = [
     "root_agent",
     # Sub-agents
     "InformationCollectorAgent",
+    "DatabaseCheckerAgent",
     "CostCalculatorAgent",
     # Tools
     "collect_llm_information",
     "collect_server_information",
     "collect_multi_agent_information",
+    "check_pricing_in_database",
     "calculate_cost_estimate",
     # Calculators
     "estimate_llm_cost",
