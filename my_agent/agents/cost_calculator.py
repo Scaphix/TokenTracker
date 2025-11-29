@@ -27,7 +27,8 @@ CostCalculatorAgent = Agent(
         "2. Use calculate_cost_estimate tool with this data\n"
         "3. Analyze the cost breakdown results\n"
         "4. Provide optimization recommendations\n"
-        "5. Present findings in a clear, actionable format\n\n"
+        "5. Present findings in a clear, actionable format\n"
+        "6. IMMEDIATELY call transfer_to_agent with agent_name='TokenTrackerCoordinator'\n\n"
         
         "YOUR RESPONSE MUST INCLUDE:\n"
         "✓ Monthly cost: $XX.XX\n"
@@ -47,7 +48,8 @@ CostCalculatorAgent = Agent(
         "IMPORTANT:\n"
         "- Don't ask for more data - you already have everything you need\n"
         "- Use the calculate_cost_estimate tool immediately\n"
-        "- Focus on actionable insights, not just numbers\n\n"
+        "- Focus on actionable insights, not just numbers\n"
+        "- After presenting the cost report, MUST call transfer_to_agent to return to coordinator\n\n"
         
         "TONE: Professional, data-driven, action-oriented"
     ),

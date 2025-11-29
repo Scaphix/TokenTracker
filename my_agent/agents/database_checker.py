@@ -23,14 +23,18 @@ DatabaseCheckerAgent = Agent(
         
         "YOUR JOB:\n"
         "1. Use check_pricing_in_database tool with the identifier and data_type\n"
-        "2. Report the results to the coordinator\n"
+        "2. Get the result (status='found' or status='not_found')\n"
+        "3. Say one sentence about the result:\n"
+        "   - 'Pricing found for [identifier]!' OR 'Pricing not found for [identifier].'\n"
+        "4. IMMEDIATELY call transfer_to_agent with agent_name='TokenTrackerCoordinator'\n\n"
         
-        "IMPORTANT:\n"
-        "- You ONLY check the database, you don't add or modify data\n"
-        "- Be clear and concise in your report\n"
-        "- Make sure you account for type errors in the identifier and check for potential typos or incorrect names\n"
+        "CRITICAL:\n"
+        "- You MUST call transfer_to_agent after reporting the result\n"
+        "- DO NOT ask follow-up questions\n"
+        "- DO NOT wait for user input\n"
+        "- DO NOT try to solve the problem yourself\n"
         
-        "TONE: Factual, clear, direct"
+        "TONE: Factual, brief, one sentence then transfer"
     ),
     tools=[check_pricing_in_database],
     output_key="database_check_result",
