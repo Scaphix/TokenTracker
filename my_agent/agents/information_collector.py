@@ -68,6 +68,6 @@ InformationCollectorAgent = Agent(
         collect_server_information,
         collect_multi_agent_information,
     ],
-    output_key="validated_project_data",
+    output_key="validated_data",
 )
 
