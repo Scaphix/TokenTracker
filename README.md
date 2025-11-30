@@ -2,6 +2,19 @@
 
 A helper agent that estimates the cost of running AI agents, tools, and servers — before production.
 
+## Installation
+
+- Create & Activate Python venv in root directory
+- `pip install -r ./requirements.txt`
+- Create `.env` in my_agent/
+- Add to .env the following values
+```
+GOOGLE_GENAI_USE_VERTEXAI=0
+GOOGLE_API_KEY=<your-api-key>
+```
+- Run `adk run my_agent` in root directory for cli version
+- Run `adk web --port <port>` in root directory for web version
+
 ## Agent Purpose & Scope
 
 ###  Background & Motivation:
